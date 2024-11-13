@@ -11,5 +11,8 @@
   "description": "",
   "devDependencies": {
     "hardhat": "^2.22.15"
+  },
+  "dependencies": {
+    "ethers": "^6.13.4"
   }
 }

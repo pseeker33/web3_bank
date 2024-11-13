@@ -5,7 +5,6 @@ contract SimpleBank {
 
 	address private owner;
 	uint256 public treasuryBalance;
-	//address public treasury;
 	uint public fee;
 
 	//constructor(uint256 _treasury, uint _fee) {
@@ -44,6 +43,11 @@ contract SimpleBank {
 	event Withdrawal(address indexed user, uint256 amountWithdrawed, uint256 fee);
 	event TreasuryWithdrawal(address indexed contractOwner, uint256 amount);
 	
+	// Función pública para acceder a la dirección del owner
+	function getOwner() external view returns (address) {
+			return owner;
+	}
+
 	// Función para que cuentas externas se registren como usuarios
 	function registerUser(string calldata _firstName, string calldata _lastName) external notTheOwner {
 		require(!userDetails[msg.sender].registrado, "Ya estas registrado");
