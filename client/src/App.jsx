@@ -6,13 +6,13 @@ import Register from "./components/Register";
 import DepositWithdraw from "./components/DepositWithdraw";
 import Balance from "./components/Balance";
 import WithdrawTreasury from "./components/WithdrawTreasury";
-import './App.css';
+import "./App.css";
 
 const App = () => {
-  const [account, setAccount] = useState(null);  // Estado para la cuenta conectada
+  const [account, setAccount] = useState(null); // Estado para la cuenta conectada
   const [contract, setContract] = useState(null); // Estado para el contrato
-  const [isOwner, setIsOwner] = useState(false);  // Estado para verificar si es el dueño
-  const [isRegistered, setIsRegistered] = useState(false);  // Estado para verificar si el usuario está registrado
+  const [isOwner, setIsOwner] = useState(false); // Estado para verificar si es el dueño
+  const [isRegistered, setIsRegistered] = useState(false); // Estado para verificar si el usuario está registrado
   const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
   //const providerUrl = process.env.SEPOLIA_RPC_URL;
 
@@ -20,7 +20,7 @@ const App = () => {
   useEffect(() => {
     const checkUserStatus = async (simpleBank) => {
       if (!account) return;
-      
+
       // Verificar si la cuenta es del owner
       const owner = await simpleBank.getOwner();
       setIsOwner(account.toLowerCase() === owner.toLowerCase());
@@ -38,7 +38,7 @@ const App = () => {
       const simpleBank = new Contract(contractAddress, SimpleBankABI, provider);
       setContract(simpleBank);
 
-      checkUserStatus(simpleBank);  // Verificar el estado del usuario
+      checkUserStatus(simpleBank); // Verificar el estado del usuario
     }
 
     // Detectar cambios de cuenta
@@ -51,14 +51,21 @@ const App = () => {
     };
   }, [account, contractAddress]);
 
-  
   return (
-    <div>
+    <div className="container">
       {/* Si no hay cuenta conectada, mostrar el botón para conectarse */}
       {!account ? (
-        <ConnectWallet setAccount={setAccount} />
+        <div className="connect-wallet">
+          <ConnectWallet setAccount={setAccount} />
+        </div>
       ) : (
         <>
+          {/* 
+          //Si hay una cuenta conectada, mostrar el botón para desconectarse 
+          <button onClick={disconnectWallet}>Disconnect</button>  
+          */}
+          <p>Connected account: {account}</p>{" "}
+          {/* Muestra la dirección de la cuenta conectada */}
           {/* Si es el owner, mostrar el dashboard del owner */}
           {isOwner ? (
             <>
@@ -69,7 +76,7 @@ const App = () => {
             <>
               {/* Si es un usuario no registrado, mostrar el formulario de registro */}
               {!isRegistered && <Register contract={contract} />}
-              
+
               {/* Si el usuario está registrado, mostrar las opciones de saldo, depósito y retiro */}
               {isRegistered && <Balance contract={contract} />}
               {isRegistered && <DepositWithdraw contract={contract} />}
@@ -82,4 +89,3 @@ const App = () => {
 };
 
 export default App;
-
