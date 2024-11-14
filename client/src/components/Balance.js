@@ -20,7 +20,7 @@ const Balance = ({ contract }) => {
   }, [contract]); // Vuelve a ejecutar si el contrato cambia
 
   return (
-    <div>
+    <div className="balance">
       <h3>Your Balance:</h3>
       <p>{balance} ETH</p>
     </div>

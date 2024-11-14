@@ -25,9 +25,9 @@ const ConnectWallet = ({ setAccount }) => {
   return (
     <div>
       {loading ? (
-        <p>Loading...</p>
+        <p className="loading">Loading...</p>
       ) : (
-        <button onClick={connectWallet}>Connect Wallet</button>
+        <button className="button" onClick={connectWallet}>Connect Wallet</button>
       )}
     </div>
   );

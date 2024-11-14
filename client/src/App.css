@@ -6,15 +6,44 @@ body {
   padding: 0;
 }
 
+input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #38b2ac;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* .form-container input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+} */
+
 /* Clases generales */
 .full-width {
   width: 100%;
 }
 
 .container {
-  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center;  */
+  min-height: 80vh;
+  width: 100%;
   margin: auto;
   padding: 1rem;
+  
 }
 
 .text-center {
@@ -43,7 +72,7 @@ body {
   background: linear-gradient(to left, #00DBDE, #FC00FF);
 }
 
-.owner-dashboard {
+.owner-dashboard, p {
   text-align: center;
   font-size: 1.5rem;
   font-weight: bold;
@@ -59,18 +88,32 @@ body {
 .register {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  max-width: 400px;
+  width: 100%; 
+  gap: 0.7rem;
   padding: 1rem;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   margin-top: 1rem;
 }
 
-.input {
+/* .form-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Para evitar que el formulario se estreche 
+} */
+
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+}
+/* .input {
   padding: 0.5rem;
   border: 1px solid #e2e8f0;
   border-radius: 4px;
-}
+} */
 
 .loading {
   color: #718096;

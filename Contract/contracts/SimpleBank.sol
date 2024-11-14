@@ -51,6 +51,8 @@ contract SimpleBank {
 	// Función para que cuentas externas se registren como usuarios
 	function registerUser(string calldata _firstName, string calldata _lastName) external notTheOwner {
 		require(!userDetails[msg.sender].registrado, "Ya estas registrado");
+		require(bytes(_firstName).length > 0 && bytes(_lastName).length > 0, "Nombre o apellido vacio");
+		
 		userDetails[msg.sender].firstName = _firstName;
 		userDetails[msg.sender].lastName = _lastName;
 		userDetails[msg.sender].registrado = true;

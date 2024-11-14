@@ -6,6 +6,7 @@ import Register from "./components/Register";
 import DepositWithdraw from "./components/DepositWithdraw";
 import Balance from "./components/Balance";
 import WithdrawTreasury from "./components/WithdrawTreasury";
+import Navbar from "./components/Navbar"; 
 import "./App.css";
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
   // Detectar cambios en la cuenta de Metamask
   useEffect(() => {
     const checkUserStatus = async (simpleBank) => {
+
       if (!account) return;
 
       // Verificar si la cuenta es del owner
@@ -30,16 +32,47 @@ const App = () => {
       setIsRegistered(userDetails.registrado);
     };
 
-    //if (account && contractAddress) {
-    if (account) {
-      console.log("Contract Address:", contractAddress);
-
+    // Verificar si hay una cuenta conectada
+    const initializeContract = async () => {
+      if (!account) return;
+      
       const provider = new BrowserProvider(window.ethereum);
-      const simpleBank = new Contract(contractAddress, SimpleBankABI, provider);
+      await provider.send("eth_requestAccounts", []); // Asegura la conexión
+      const signer = await provider.getSigner(); // Obtén el signer desde el provider
+  
+      // Crea una instancia del contrato usando el signer para permitir transacciones
+      const simpleBank = new Contract(contractAddress, SimpleBankABI, signer);
+      setContract(simpleBank);
+  
+      checkUserStatus(simpleBank); // Verificar el estado del usuario
+    };
+    
+    initializeContract(); // Llama a la función async
+
+
+
+
+/*       const provider = new BrowserProvider(window.ethereum);
+      const signer = provider.getSigner(); // Obtener el signer de la cuenta conectada
+
+      // Creamos una instancia del contrato con el PROVIDER PARA LECTURAS (como getOwner, userDetails)
+      const simpleBankWithProvider = new Contract(contractAddress, SimpleBankABI, provider); 
+
+      // Crea una nueva instancia del contrato con el SIGNER PARA ENVIAR TRANSACCIONES
+      const simpleBankWithSigner = new Contract(contractAddress, SimpleBankABI, signer); 
+      
+      setContract(simpleBankWithSigner); // Almacenamos la instancia con el signer para las transacciones
+
+      checkUserStatus(simpleBankWithProvider); // Usamos la instancia con provider para lecturas
+ */
+
+      /* // Crea una instancia del contrato usando el signer para permitir transacciones
+      const simpleBank = new Contract(contractAddress, SimpleBankABI, signer);
+      //const simpleBank = new Contract(contractAddress, SimpleBankABI, provider);
       setContract(simpleBank);
 
-      checkUserStatus(simpleBank); // Verificar el estado del usuario
-    }
+      checkUserStatus(simpleBank); // Verificar el estado del usuario */
+
 
     // Detectar cambios de cuenta
     window.ethereum.on("accountsChanged", (accounts) => {
@@ -51,39 +84,45 @@ const App = () => {
     };
   }, [account, contractAddress]);
 
-  return (
-    <div className="container">
-      {/* Si no hay cuenta conectada, mostrar el botón para conectarse */}
-      {!account ? (
-        <div className="connect-wallet">
-          <ConnectWallet setAccount={setAccount} />
-        </div>
-      ) : (
-        <>
-          {/* 
-          //Si hay una cuenta conectada, mostrar el botón para desconectarse 
-          <button onClick={disconnectWallet}>Disconnect</button>  
-          */}
-          <p>Connected account: {account}</p>{" "}
-          {/* Muestra la dirección de la cuenta conectada */}
-          {/* Si es el owner, mostrar el dashboard del owner */}
-          {isOwner ? (
-            <>
-              <h2>Owner Dashboard</h2>
-              <WithdrawTreasury contract={contract} />
-            </>
-          ) : (
-            <>
-              {/* Si es un usuario no registrado, mostrar el formulario de registro */}
-              {!isRegistered && <Register contract={contract} />}
+  return (    
+    <div>
+      <Navbar account={account} isRegistered={isRegistered} setAccount={setAccount} />
+      <div className="container">
+        {/* Si no hay cuenta conectada, mostrar el botón para conectarse */}
+        {!account ? (
+          <div className="connect-wallet">
+            <ConnectWallet setAccount={setAccount} />
+          </div>
+        ) : (
+          <>
+            {/* Muestra la dirección de la cuenta conectada */}
+            <p className="connected-account">Connected account: {account}</p>{" "}
 
-              {/* Si el usuario está registrado, mostrar las opciones de saldo, depósito y retiro */}
-              {isRegistered && <Balance contract={contract} />}
-              {isRegistered && <DepositWithdraw contract={contract} />}
-            </>
-          )}
-        </>
-      )}
+            {/* Si es el owner, mostrar el dashboard del owner */}
+            {isOwner ? (
+              <div className="owner-dashboard">
+                <h2>Owner Dashboard</h2>
+                <WithdrawTreasury contract={contract} />
+              </div>
+            ) : (
+              <>
+                {/* Si es un usuario no registrado, mostrar el formulario de registro */}
+                {!isRegistered && (
+                  <div className="form-wrapper">
+                    <Register contract={contract} />
+                  </div>
+                )}
+                {/* {!isRegistered && <Register contract={contract} />} */}
+
+
+                {/* Si el usuario está registrado, mostrar las opciones de saldo, depósito y retiro */}
+                {isRegistered && <Balance contract={contract} />}
+                {isRegistered && <DepositWithdraw contract={contract} />}
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

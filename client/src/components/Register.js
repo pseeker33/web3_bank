@@ -8,6 +8,21 @@ const Register = ({ contract }) => {
   const handleRegister = async () => {
     setLoading(true);
     try {
+      const tx = await contract.registerUser(firstName, lastName); // Envía la transacción
+      console.log("Transaction:", tx);
+      await tx.wait(); // Espera a que la transacción se confirme
+      alert("Registration successful!");
+    } catch (error) {
+      console.error("Registration failed", error);
+      alert("Registration failed: " + (error.reason || "Unknown error"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* const handleRegister = async () => {
+    setLoading(true);
+    try {
       await contract.registerUser(firstName, lastName);
       alert("Registration successful!");
     } catch (error) {
@@ -16,9 +31,9 @@ const Register = ({ contract }) => {
       setLoading(false);
     }
   };
-
+ */
   return (
-    <div>
+    <div className="register">
       <input
         type="text"
         placeholder="First Name"

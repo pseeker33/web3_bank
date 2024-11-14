@@ -12,7 +12,7 @@ module.exports = {
   solidity: "0.8.27",
   networks: {
     hardhat: {
-      chainId: 1337  // El ID de cadena para la red local de Hardhat
+      chainId: 31337  // El ID de cadena para la red local de Hardhat
     }
     /* sepolia: {
       url: process.env.SEPOLIA_RPC_URL,
